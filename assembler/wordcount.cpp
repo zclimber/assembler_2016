@@ -20,14 +20,30 @@ int count_words_avx(const char *str) {
 	__m256i end_vec = _mm256_set1_epi8(0);
 	ull eqmask = 1LL << 31;
 	int ans = 0, zero, i = 0;
+	unsigned int dbits;
+
+	int offs = reinterpret_cast<ull>(str) % 32;
+
+	if (offs != 0) {
+		int df = 32 - offs;
+		for (int i = 0; i < df; i++) {
+			eqmask += (1LL << (32 + i)) * (str[i] == space);
+		}
+		dbits = (eqmask ^ (eqmask >> 1)) >> 31;
+		dbits &= (1LL << df) - 1;
+		ans += __builtin_popcount(dbits);
+		eqmask >>= df;
+		str += df;
+	}
 
 	for (;; i += 32) {
-		__m256i data = _mm256_lddqu_si256(reinterpret_cast<const __m256i *>(str + i));
+		__m256i data = _mm256_load_si256(
+				reinterpret_cast<const __m256i *>(str + i));
 		__m256i cmp = _mm256_cmpeq_epi8(data, space_vec);
 		eqmask |= ((ull) _mm256_movemask_epi8(cmp)) << 32;
 		cmp = _mm256_cmpeq_epi8(data, end_vec);
 		zero = _mm256_movemask_epi8(cmp);
-		unsigned int dbits = (eqmask ^ (eqmask >> 1)) >> 31;
+		dbits = (eqmask ^ (eqmask >> 1)) >> 31;
 		if (zero != 0) {
 			break;
 		}
@@ -39,7 +55,7 @@ int count_words_avx(const char *str) {
 	eqmask >>= 31;
 	int len = __builtin_ctz(zero);
 	eqmask |= (2LL << len);
-	unsigned int dbits = (eqmask ^ (eqmask >> 1)) & ((2LL << len) - 1);
+	dbits = (eqmask ^ (eqmask >> 1)) & ((2LL << len) - 1);
 	ans += __builtin_popcount(dbits);
 	return ans / 2;
 }
