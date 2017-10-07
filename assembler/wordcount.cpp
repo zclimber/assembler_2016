@@ -37,7 +37,7 @@ int count_words_avx(const char *str) {
 	}
 
 	for (;; i += 32) {
-		__m256i data = _mm256_load_si256(
+		__m256i data = _mm256_stream_load_si256(
 				reinterpret_cast<const __m256i *>(str + i));
 		__m256i cmp = _mm256_cmpeq_epi8(data, space_vec);
 		eqmask |= ((ull) _mm256_movemask_epi8(cmp)) << 32;

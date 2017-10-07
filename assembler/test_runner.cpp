@@ -6,10 +6,11 @@
 #include "wordcount.h"
 #include "memcpy.h"
 
-const int length = 100000;
-const int iter = 1000;
+const int length = 10000000;
+const int iter = 100;
 const int offs = 10;
 
+char cpa[length], cpb[length];
 char str[length + 1];
 std::mt19937 mt(time(0));
 
@@ -57,7 +58,6 @@ void test_wordcount() {
 
 void test_memcpy() {
 
-	char cpa[length], cpb[length];
 	std::cout << "Copying strings of length " << length << ", repeat " << iter * offs << " times\n";
 	flush(std::cout);
 
