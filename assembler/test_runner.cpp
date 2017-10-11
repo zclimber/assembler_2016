@@ -2,13 +2,14 @@
 #include <iomanip>
 #include <iostream>
 #include <random>
+#include <cstring>
 
 #include "wordcount.h"
 #include "memcpy.h"
 
-const int length = 10000000;
-const int iter = 100;
-const int offs = 10;
+const int length = 100000000;
+const int iter = 10;
+const int offs = 1;
 
 char cpa[length], cpb[length];
 char str[length + 1];
@@ -31,7 +32,9 @@ void test_wordcount() {
 		}
 		str[length] = 0;
 
-		for (int e = 0; e < offs; e++) {
+		int st = 0;
+
+		for (int e = 0 + st; e < offs + st; e++) {
 			auto pa = std::chrono::steady_clock::now();
 			int res_1 = count_words_avx(str + e);
 			auto pb = std::chrono::steady_clock::now();

@@ -8,8 +8,7 @@
 #ifndef MEMCPY_H_
 #define MEMCPY_H_
 
-#include <cstring>
-#include <immintrin.h>
+#include <cstddef>
 
 void memcpy_simple(void* dst, const void* src, std::size_t size);
 void memcpy_avx(void* dst, const void* src, std::size_t size);

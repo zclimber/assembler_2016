@@ -2,6 +2,8 @@
 
 typedef unsigned long long ull;
 
+#include <immintrin.h>
+
 int count_words_simple(const char *str) {
 	int ans = 0;
 	if (*str != space) {

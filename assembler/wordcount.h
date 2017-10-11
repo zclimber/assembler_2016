@@ -7,7 +7,6 @@
 #ifndef WORDCOUNT_H_
 #define WORDCOUNT_H_
 
-#include <immintrin.h>
 
 const char space = ' ';
 

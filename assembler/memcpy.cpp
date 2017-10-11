@@ -1,6 +1,7 @@
 #include "memcpy.h"
 
 #include <cassert>
+#include <immintrin.h>
 
 void memcpy_simple(void* dst, const void* src, std::size_t size) {
 	char * dst_oth = reinterpret_cast<char *>(dst);
@@ -26,7 +27,7 @@ void memcpy_avx(void* dst, const void* src, std::size_t size) {
 	}
 	__m256i * dst_a = reinterpret_cast<__m256i *>(dst);
 	const __m256i * src_a = reinterpret_cast<const __m256i *>(src);
-	if(reinterpret_cast<unsigned long long>(src) % 32 == 0){
+	if (reinterpret_cast<unsigned long long>(src) % 32 == 0) {
 		for (; 32 <= size;) {
 			_mm256_stream_si256(dst_a, _mm256_stream_load_si256(src_a));
 			size -= 32;
